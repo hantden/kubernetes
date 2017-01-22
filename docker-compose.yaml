@@ -1,0 +1,43 @@
+version: '2'
+services:
+  etcd:
+    image: gcr.io/google_containers/etcd:3.0.4
+    container_name: etcd
+    network_mode: "host"
+    pid: host
+    environment:
+      ETCD_ADVERTISE_CLIENT_URLS: http://127.0.0.1:2379
+      ETCD_INITIAL_ADVERTISE_PEER_URLS: http://127.0.0.1:2380
+      ETCD_LISTEN_CLIENT_URLS=http: //0.0.0.0:2379,http://0.0.0.0:4001
+      ETCD_LISTEN_PEER_URLS=http: //0.0.0.0:2380,http://0.0.0.0:7001
+      ETCD_NAME: main
+
+  kubelet:
+    image: gcr.io/google_containers/hyperkube:v1.4.6
+    container_name: kubelet
+    network_mode: "host"
+    pid: host
+    privileged: true
+    tty: true
+    entrypoint:
+      - /hyperkube
+      - kubelet
+      - allow-privileged
+      - api-servers=http://127.0.0.1:8080
+      - config=/etc/kubernetes/manifests
+      - cluster-dns=10.0.0.10
+      - cluster-domain=cluster.local
+      - v=2
+    volumes:
+      - /etc/cni/net.d:/etc/cni/net.d
+      - /etc/kubernetes:/etc/kubernetes
+      - /sys:/sys:rw
+      - /var/run:/var/run:rw
+      - /run:/run:rw
+      - /var/lib/docker:/var/lib/docker:rw
+      - /var/lib/kubelet:/var/lib/kubelet:shared
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/log/containers:/var/log/containers:rw
+      - /etc/hosts:/etc/hosts
+      - /opt/sdn/conf:/etc/openvswitch
+      - /opt/sdn/run:/var/run/openvswitch
