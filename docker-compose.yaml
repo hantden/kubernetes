@@ -22,22 +22,19 @@ services:
     entrypoint:
       - /hyperkube
       - kubelet
-      - allow-privileged
-      - api-servers=http://127.0.0.1:8080
-      - config=/etc/kubernetes/manifests
-      - cluster-dns=10.0.0.10
-      - cluster-domain=cluster.local
-      - v=2
-    volumes:
-      - /etc/cni/net.d:/etc/cni/net.d
-      - /etc/kubernetes:/etc/kubernetes
-      - /sys:/sys:rw
-      - /var/run:/var/run:rw
-      - /run:/run:rw
-      - /var/lib/docker:/var/lib/docker:rw
-      - /var/lib/kubelet:/var/lib/kubelet:shared
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /var/log/containers:/var/log/containers:rw
-      - /etc/hosts:/etc/hosts
-      - /opt/sdn/conf:/etc/openvswitch
-      - /opt/sdn/run:/var/run/openvswitch
+      - --allow-privileged
+      - --containerized
+      - --address=0.0.0.0
+      - --api-servers=http://127.0.0.1:8080
+      - --config=/etc/kubernetes/manifests-multi
+      - --cluster-dns=10.0.0.10
+      - --cluster-domain=cluster.local
+      - --v=2
+      volumes:
+        - /:/rootfs:ro
+        - /sys:/sys:ro
+        - /dev:/dev
+        - /var/run/docker.sock:/var/run/docker.sock
+        - /var/lib/docker/:/var/lib/docker:ro
+        - /var/lib/kubelet/:/var/lib/kubelet:rw,rslave
+        - /var/run:/var/run:rw
