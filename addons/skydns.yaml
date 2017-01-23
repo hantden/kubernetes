@@ -50,7 +50,6 @@ spec:
         # command = "/kube-dns"
         - --domain=cluister.local
         - --dns-port=10053
-        - --kube-master-url=http://127.0.0.1:8080
         ports:
         - containerPort: 10053
           name: dns-local

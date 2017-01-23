@@ -18,6 +18,7 @@ spec:
     - "--min-resync-period=3m"
     - "--leader-elect=true"
     - "--cluster-cidr=10.1.0.0/16"
+    - "--insecure-experimental-approve-all-kubelet-csrs-for-group=system:kubelet-bootstrap"
     - "--v=2"
     volumeMounts:
     - name: data
