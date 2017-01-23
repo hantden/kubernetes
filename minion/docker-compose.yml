@@ -1,0 +1,27 @@
+version: '2'
+services:
+  kubelet:
+    image: gcr.io/google_containers/hyperkube:v1.4.6
+    container_name: kubelet
+    network_mode: "host"
+    pid: host
+    privileged: true
+    tty: true
+    entrypoint:
+      - /hyperkube
+      - kubelet
+      - --allow-privileged
+#      - --containerized
+      - --address=0.0.0.0
+      - --api-servers=http://masterip:8080
+      - --config=/etc/kubernetes/manifests
+      - --v=2
+    volumes:
+#      - /:/rootfs:ro
+      - /sys:/sys:ro
+      - /dev:/dev
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /var/lib/kubelet/:/var/lib/kubelet:rw,rslave
+      - /var/run:/var/run:rw
+      - /opt/kubernetes/manifests/minion:/etc/kubernetes/manifests/
