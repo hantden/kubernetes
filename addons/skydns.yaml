@@ -25,10 +25,6 @@ spec:
       - name: kubedns
         image: gcr.io/google_containers/kubedns-amd64:1.8
         resources:
-          # TODO: Set memory limits when we've profiled the container for large
-          # clusters, then set request = limit to keep this container in
-          # guaranteed class. Currently, this container falls into the
-          # "burstable" category so the kubelet doesn't backoff from restarting it.
           limits:
             memory: 170Mi
           requests:
@@ -48,15 +44,13 @@ spec:
             path: /readiness
             port: 8081
             scheme: HTTP
-          # we poll on pod startup for the Kubernetes master service and
-          # only setup the /readiness HTTP server once that's available.
           initialDelaySeconds: 3
           timeoutSeconds: 5
         args:
         # command = "/kube-dns"
-        - --domain=cluster.local.
+        - --domain=cluister.local
         - --dns-port=10053
-
+        - --kube-master-url=http://127.0.0.1:8080
         ports:
         - containerPort: 10053
           name: dns-local
@@ -94,10 +88,6 @@ spec:
             memory: 50Mi
           requests:
             cpu: 10m
-            # Note that this container shouldn't really need 50Mi of memory. The
-            # limits are set higher than expected pending investigation on #29688.
-            # The extra memory was stolen from the kubedns container to keep the
-            # net memory requested by the pod constant.
             memory: 50Mi
         args:
         - --cmd=nslookup kubernetes.default.svc.cluster.local 127.0.0.1 >/dev/null
@@ -110,3 +100,25 @@ spec:
         - containerPort: 8080
           protocol: TCP
       dnsPolicy: Default  # Don't use cluster DNS.
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-dns
+  namespace: kube-system
+  labels:
+    k8s-app: kube-dns
+    kubernetes.io/cluster-service: "true"
+    kubernetes.io/name: "KubeDNS"
+spec:
+  selector:
+    k8s-app: kube-dns
+  clusterIP: 10.0.0.10
+  ports:
+  - name: dns
+    port: 53
+    protocol: UDP
+  - name: dns-tcp
+    port: 53
+    protocol: TCP
+
