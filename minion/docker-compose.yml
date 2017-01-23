@@ -24,4 +24,4 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
       - /var/lib/kubelet/:/var/lib/kubelet:rw,rslave
       - /var/run:/var/run:rw
-      - /opt/kubernetes/manifests/minion:/etc/kubernetes/manifests/
+      - /opt/kubernetes/minion:/etc/kubernetes/
