@@ -5,6 +5,8 @@ services:
     container_name: etcd
     network_mode: "host"
     pid: host
+    entrypoint:
+      - etcd
 #    environment:
 #      ETCD_ADVERTISE_CLIENT_URLS: http://127.0.0.1:2379
 #      ETCD_INITIAL_ADVERTISE_PEER_URLS: http://127.0.0.1:2380
@@ -23,18 +25,19 @@ services:
       - /hyperkube
       - kubelet
       - --allow-privileged
-      - --containerized
+#      - --containerized
       - --address=0.0.0.0
       - --api-servers=http://127.0.0.1:8080
-      - --config=/etc/kubernetes/manifests-multi
+      - --config=/etc/kubernetes/manifests
       - --cluster-dns=10.0.0.10
       - --cluster-domain=cluster.local
       - --v=2
-      volumes:
-        - /:/rootfs:ro
-        - /sys:/sys:ro
-        - /dev:/dev
-        - /var/run/docker.sock:/var/run/docker.sock
-        - /var/lib/docker/:/var/lib/docker:ro
-        - /var/lib/kubelet/:/var/lib/kubelet:rw,rslave
-        - /var/run:/var/run:rw
+    volumes:
+#      - /:/rootfs:ro
+      - /sys:/sys:ro
+      - /dev:/dev
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /var/lib/kubelet/:/var/lib/kubelet:rw,rslave
+      - /var/run:/var/run:rw
+      - /opt/kubernetes/manifests/:/etc/kubernetes/manifests/
