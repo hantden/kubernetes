@@ -1,3 +1,12 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: k8s-api
+  namespace: kube-system
+spec:
+  hostNetwork: true
+  containers:
   - name: apiserver
     image: gcr.io/google_containers/hyperkube-amd64:v1.4.6
     command:
@@ -13,6 +22,7 @@
     - "--tls-private-key-file=/etc/kubernetes/ssl/apiserver-key.pem"
     - "--client-ca-file=/etc/kubernetes/ssl/ca.pem"
     - "--service-account-key-file=/etc/kubernetes/ssl/apiserver-key.pem"
+    - "--token-auth-file=/etc/kubernetes/ssl/token.csv"
     - "--allow-privileged=true"
     - "--v=2"
     volumeMounts:
@@ -22,3 +32,4 @@
   - name: kubernetes-ssl
     hostPath:
       path: /opt/kubernetes/ssl
+      readOnly: true

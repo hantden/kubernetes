@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: k8s-master
+  name: k8s-scheduler
   namespace: kube-system
 spec:
   hostNetwork: true
