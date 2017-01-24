@@ -50,7 +50,7 @@ spec:
         # command = "/kube-dns"
         - --domain=cluster.local
         - --dns-port=10053
-        - --kube-master-url=https://{{ getenv "KUBERNETES_SERVICE_IP" }}:443
+        - --kube-master-url=https://10.0.0.1:443
         - --kubecfg-file=/etc/kubernetes/ssl/kube.conf
         ports:
         - containerPort: 10053
@@ -104,11 +104,11 @@ spec:
         - containerPort: 8080
           protocol: TCP
       dnsPolicy: Default  # Don't use cluster DNS.
-    volumes:
-    - name: kubernetes-ssl
-      hostPath:
-        path: /opt/kubernetes/ssl
-        readOnly: true
+      volumes:
+      - name: kubernetes-ssl
+        hostPath:
+          path: /opt/kubernetes/ssl
+
 ---
 apiVersion: v1
 kind: Service
