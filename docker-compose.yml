@@ -41,3 +41,4 @@ services:
       - /var/lib/kubelet/:/var/lib/kubelet:rw,rslave
       - /var/run:/var/run:rw
       - /opt/kubernetes/manifests/:/etc/kubernetes/manifests/
+      - /opt/kubernetes/ssl/:/etc/kubernetes/ssl/
