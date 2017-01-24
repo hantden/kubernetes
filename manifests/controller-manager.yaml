@@ -1,0 +1,29 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: k8s-master
+  namespace: kube-system
+spec:
+  hostNetwork: true
+  containers:
+  - name: controller-manager
+    image: gcr.io/google_containers/hyperkube-amd64:v1.4.6
+    command:
+    - "/hyperkube"
+    - controller-manager
+    - "--master=127.0.0.1:8080"
+    - "--service-account-private-key-file=/etc/kubernetes/ssl/apiserver-key.pem"
+    - "--root-ca-file=/srv/kubernetes/ca.crt"
+    - "--min-resync-period=3m"
+    - "--leader-elect=true"
+    - "--cluster-cidr=10.1.0.0/16"
+    - "--insecure-experimental-approve-all-kubelet-csrs-for-group=system:kubelet-bootstrap"
+    - "--v=2"
+    volumeMounts:
+    - name: kubernetes-ssl
+      mountPath: /etc/kubernetes/ssl
+  volumes:
+  - name: kubernetes-ssl
+    hostPath:
+      path: /opt/kubernetes/ssl
