@@ -48,8 +48,10 @@ spec:
           timeoutSeconds: 5
         args:
         # command = "/kube-dns"
-        - --domain=cluister.local
+        - --domain=cluster.local
         - --dns-port=10053
+        - --kube-master-url=https://{{ getenv "KUBERNETES_SERVICE_IP" }}:443
+        - --kubecfg-file=/etc/kubernetes/ssl/kube.conf
         ports:
         - containerPort: 10053
           name: dns-local
@@ -57,6 +59,9 @@ spec:
         - containerPort: 10053
           name: dns-tcp-local
           protocol: TCP
+        volumeMounts:
+        - name: kubernetes-ssl
+          mountPath: /etc/kubernetes/ssl
       - name: dnsmasq
         image: gcr.io/google_containers/kube-dnsmasq-amd64:1.4
         livenessProbe:
@@ -99,6 +104,11 @@ spec:
         - containerPort: 8080
           protocol: TCP
       dnsPolicy: Default  # Don't use cluster DNS.
+    volumes:
+    - name: kubernetes-ssl
+      hostPath:
+        path: /opt/kubernetes/ssl
+        readOnly: true
 ---
 apiVersion: v1
 kind: Service
@@ -120,4 +130,3 @@ spec:
   - name: dns-tcp
     port: 53
     protocol: TCP
-

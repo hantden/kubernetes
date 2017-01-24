@@ -41,4 +41,32 @@ spec:
             port: 9090
           initialDelaySeconds: 30
           timeoutSeconds: 30
-
+        args:
+          # Uncomment the following line to manually specify Kubernetes API server Host
+          # If not specified, Dashboard will attempt to auto discover the API server and connect
+          # to it. Uncomment only if the default does not work.
+          - --apiserver-host=https://{{ getenv "KUBERNETES_SERVICE_IP" }}:443
+          - --kubeconfig=/etc/kubernetes/ssl/kube.conf
+        volumeMounts:
+        - name: kubernetes-etc
+          mountPath: /etc/kubernetes/ssl
+          readOnly: true
+      volumes:
+      - name: kubernetes-etc
+        hostPath:
+          path: /etc/kubernetes/ssl
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubernetes-dashboard
+  namespace: kube-system
+  labels:
+    k8s-app: kubernetes-dashboard
+    kubernetes.io/cluster-service: "true"
+spec:
+  selector:
+    k8s-app: kubernetes-dashboard
+  ports:
+  - port: 80
+    targetPort: 9090
