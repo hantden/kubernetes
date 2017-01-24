@@ -8,12 +8,11 @@ spec:
   hostNetwork: true
   containers:
   - name: apiserver
-    image: gcr.io/google_containers/hyperkube-amd64:v1.4.6
+    image: gcr.io/google_containers/hyperkube-amd64:v1.5.2
     command:
     - "/hyperkube"
     - apiserver
     - "--service-cluster-ip-range=10.0.0.1/24"
-#    - "--insecure-bind-address=0.0.0.0"
     - "--secure-port=443"
     - "--etcd-servers=http://127.0.0.1:2379"
     - "--admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,DefaultStorageClass,ResourceQuota"

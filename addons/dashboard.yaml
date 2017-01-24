@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: kubernetes-dashboard-v1.4.0
+  name: kubernetes-dashboard-v1.5.1
   namespace: kube-system
   labels:
     app: kubernetes-dashboard
@@ -15,7 +15,7 @@ spec:
     metadata:
       labels:
         app: kubernetes-dashboard
-        version: v1.4.0
+        version: v1.5.1
         kubernetes.io/cluster-service: "true"
       annotations:
         scheduler.alpha.kubernetes.io/critical-pod: ''
@@ -24,7 +24,7 @@ spec:
       hostNetwork: true
       containers:
       - name: kubernetes-dashboard
-        image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.4.0
+        image: gcr.io/google_containers/kubernetes-dashboard-amd64:v1.5.1
         resources:
           # keep request = limit to keep this container in guaranteed class
           limits:
@@ -54,7 +54,7 @@ spec:
       volumes:
       - name: kubernetes-etc
         hostPath:
-          path: /etc/kubernetes/ssl
+          path: /opt/kubernetes/ssl
 ---
 apiVersion: v1
 kind: Service

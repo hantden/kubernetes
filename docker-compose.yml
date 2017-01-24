@@ -15,7 +15,7 @@ services:
 #      ETCD_NAME: main
 
   kubelet:
-    image: gcr.io/google_containers/hyperkube:v1.4.6
+    image: gcr.io/google_containers/hyperkube:v1.5.2
     container_name: kubelet
     network_mode: "host"
     pid: host
