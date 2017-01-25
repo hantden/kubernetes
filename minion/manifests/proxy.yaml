@@ -2,26 +2,28 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: k8s-master
+  name: k8s-proxy
   namespace: kube-system
 spec:
   hostNetwork: true
   containers:
   - name: kube-proxy
-    image: gcr.io/google_containers/hyperkube-amd64:v1.4.6
+    image: gcr.io/google_containers/hyperkube-amd64:v1.5.2
     command:
     - /hyperkube
     - proxy
-    - --master=http://masterip:8080
-    - --kubeconfig=/etc/kubernetes/worker-kubeconfig.yaml
+    - --master=https://54.154.132.181:8443
+    - --kubeconfig=/etc/kubernetes/ssl/worker-kubeconfig.yaml
     - --proxy-mode=iptables
     securityContext:
       privileged: true
     volumeMounts:
-      - name: "kubeconfig"
-        mountPath: /etc/kubernetes/worker-kubeconfig.yaml
-        readOnly: true
+    - name: kubernetes-ssl
+      mountPath: /etc/kubernetes/ssl
   volumes:
-    - name: "kubeconfig"
-      hostPath:
-      path: "/opt/kubernetes/minion/worker-kubeconfig.yaml"
+  - name: kubernetes-ssl
+    hostPath:
+      path: /opt/kubernetes/ssl
+      readOnly: true
+
+    

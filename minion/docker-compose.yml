@@ -1,7 +1,7 @@
 version: '2'
 services:
   kubelet:
-    image: gcr.io/google_containers/hyperkube:v1.4.6
+    image: gcr.io/google_containers/hyperkube:v1.5.2
     container_name: kubelet
     network_mode: "host"
     pid: host
@@ -11,17 +11,22 @@ services:
       - /hyperkube
       - kubelet
       - --allow-privileged
-#      - --containerized
       - --address=0.0.0.0
-      - --api-servers=http://masterip:8080
+      - --node-ip=172.31.30.8
+      - --api-servers=https://54.154.132.181:8443
       - --config=/etc/kubernetes/manifests
+      - --cluster-dns=10.0.0.10
+      - --cluster-domain=cluster.local
+      - --kubeconfig=/etc/kubernetes/ssl/worker-kubeconfig.yaml
+      - --tls-cert-file=/etc/kubernetes/ssl/slave-worker.pem 
+      - --tls-private-key-file=/etc/kubernetes/ssl/slave-worker-key.pem
       - --v=2
     volumes:
-#      - /:/rootfs:ro
       - /sys:/sys:ro
       - /dev:/dev
       - /var/run/docker.sock:/var/run/docker.sock
       - /var/lib/docker/:/var/lib/docker:ro
       - /var/lib/kubelet/:/var/lib/kubelet:rw,rslave
       - /var/run:/var/run:rw
-      - /opt/kubernetes/minion:/etc/kubernetes/
+      - /opt/kubernetes/manifests/:/etc/kubernetes/manifests/
+      - /opt/kubernetes/ssl/:/etc/kubernetes/ssl/
