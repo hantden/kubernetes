@@ -10,10 +10,11 @@ services:
     entrypoint:
       - /hyperkube
       - kubelet
+      - --api-servers=https://54.154.201.60:8443
       - --allow-privileged
       - --address=0.0.0.0
+      - --register-node=true
       - --node-ip=172.31.30.8
-      - --api-servers=https://54.154.132.181:8443
       - --config=/etc/kubernetes/manifests
       - --cluster-dns=10.0.0.10
       - --cluster-domain=cluster.local
@@ -28,5 +29,5 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
       - /var/lib/kubelet/:/var/lib/kubelet:rw,rslave
       - /var/run:/var/run:rw
-      - /opt/kubernetes/manifests/:/etc/kubernetes/manifests/
+      - /opt/kubernetes/minion/manifests/:/etc/kubernetes/manifests/
       - /opt/kubernetes/ssl/:/etc/kubernetes/ssl/
