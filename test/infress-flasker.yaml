@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: flasker-hub
+spec:
+  rules:
+  - host: flasker.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: flasker-hub-service
+          servicePort: 80
